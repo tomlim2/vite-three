@@ -7,7 +7,7 @@ function setup() {
 	createCanvas(900, 900);
 	rectMode(CENTER);
 	ctx = drawingContext;
-	motionClasses = [Motion01, Motion02, Motion03, Motion04, Motion05, Motion06, Motion07, Motion08, Motion09, Motion10, Motion11, Motion12, Motion13, Motion14, Motion15, Motion16];
+	motionClasses = [Motion01];
 	shuffle(motionClasses, true);
 
 	let gridSize = width * 0.8;
