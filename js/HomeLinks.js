@@ -1,6 +1,6 @@
 const linkInfoList = [
-  ["p5-motion-1", "p5", "motion-1"],
-  ["p5-motion-1-fragnent", "p5", "motion-1-fragnent"],
+  ["p5-motion-1-fragment", "p5", "motion-1-fragment"],
+  ["p5-motion-1-2025", "p5", "motion-1-2025"],
   ["pokemon-card", "etc", "pokemon-card"],
 ];
 
