@@ -1,0 +1,79 @@
+:root {
+    --color-dark-red: #c1292e;
+    --color-yellow: #f1d302;
+    --color-blue: #1A53C0;
+    --color-vivid-blue: #0000ff;
+    --color-dark-blue: #083d77;
+    --color-red: #da4167;
+    --color-orange: #FBAF00;
+    --color-green: #00AF54;
+    --color-white: #f0f0f0;
+    --color-black: #252525;
+}
+:root {
+    --background-color: var(--color-white);
+    --text-color: var(--color-black);
+    --link-color: var(--color-blue);
+    --link-hover-color: var(--color-blue);
+    --highlight-color: var(--color-yellow);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin:0;
+    padding:0;
+}
+a{
+    text-decoration:none;
+    color: var(--link-color);
+}
+a:hover {
+    color: var(--link-hover-color);
+    background-color: var(--highlight-color);
+}
+
+nav {
+    position: absolute;
+    top:-4px;
+    left:0;
+    width:100%;
+    background-color: rgba(255, 255, 255, .1);
+}
+
+nav ul li {
+    display:inline;
+}
+
+nav ul li + li {
+    margin-left:20px;
+}
+
+nav ul li a {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+section {
+    margin-top: 40px;
+}
+
+section h1{
+    font-size: 1em;
+    margin: 0;
+}
+
+section p {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+ul li{
+    margin: 0;
+}
+
