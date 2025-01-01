@@ -73,18 +73,73 @@ class Motion3 extends Motion {
   }
   show() {
     push();
-		noStroke();
-		translate(this.x, this.y);
-		let clr = lerpColor(this.clr1, this.clr2, this.progress);
-		fill(clr);
-		rect(-(this.w / 4) + (this.w / 2 * this.progress), -(this.w / 4), this.w / 2);
-		rect((this.w / 4) - (this.w / 2 * this.progress), (this.w / 4), this.w / 2);
-		fill(this.clr2);
-		circle(this.w / 4, -this.w / 4, this.w * 0.3);
-		circle(-this.w / 4, this.w / 4, this.w * 0.3);
-		fill(this.clr1);
-		circle(-this.w / 4, -this.w / 4, this.w * 0.2);
-		circle(this.w / 4, this.w / 4, this.w * 0.2);
-		pop();
+    noStroke();
+    translate(this.x, this.y);
+    let clr = lerpColor(this.clr1, this.clr2, this.progress);
+    fill(clr);
+    rect(
+      -(this.w / 4) + (this.w / 2) * this.progress,
+      -(this.w / 4),
+      this.w / 2
+    );
+    rect(this.w / 4 - (this.w / 2) * this.progress, this.w / 4, this.w / 2);
+    fill(this.clr2);
+    circle(this.w / 4, -this.w / 4, this.w * 0.3);
+    circle(-this.w / 4, this.w / 4, this.w * 0.3);
+    fill(this.clr1);
+    circle(-this.w / 4, -this.w / 4, this.w * 0.2);
+    circle(this.w / 4, this.w / 4, this.w * 0.2);
+    pop();
   }
+}
+
+class Motion4 extends Motion {
+  constructor(x, y, w, clr1, clr2) {
+    super(x, y, w, clr1, clr2);
+  }
+  show() {
+    push();
+    translate(this.x, this.y);
+    noStroke();
+    fill(this.clr1);
+    circle(
+      -((this.w / 4) * this.progress),
+      (this.w / 4) * this.progress,
+      this.w * 0.2 * this.progress
+    );
+    fill(this.clr2);
+    circle(
+      (this.w / 4) * this.progress,
+      -((this.w / 4) * this.progress),
+      this.w * 0.2 * this.progress
+    );
+    fill(this.clr1);
+
+    arc((this.w / 4) * this.progress, 0, this.w / 2, this.w / 2, 0, PI);
+    fill(this.clr2);
+    arc((-this.w / 4) * this.progress, 0, this.w / 2, this.w / 2, PI, TAU);
+
+    pop();
+  }
+}
+
+class Motion5 extends Motion {
+  constructor(x, y, w, clr1, clr2) {
+    super(x, y, w, clr1, clr2);
+  }
+  show() {
+		push();
+		translate(this.x, this.y);
+		fill(this.clr1);
+		noStroke();
+		square((this.w / 4), (this.w / 4) - (this.w / 2 * this.progress), this.w / 2);
+		square(-(this.w / 4), -(this.w / 4) + (this.w / 2 * this.progress), this.w / 2);
+		fill(this.clr2);
+		square(0, 0, this.w / 2);
+		fill(this.clr1);
+		square((this.w / 8) - (this.w / 4 * this.progress), -(this.w / 8), this.w / 4);
+		square(-(this.w / 8) + (this.w / 4 * this.progress), (this.w / 8), this.w / 4);
+		noStroke();
+		pop();
+	}
 }
