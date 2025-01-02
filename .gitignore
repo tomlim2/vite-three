@@ -22,5 +22,3 @@ build/
 # Ignore IDE specific files
 .vscode/
 .idea/
-
-p5/resources/
