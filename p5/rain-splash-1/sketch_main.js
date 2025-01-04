@@ -23,6 +23,47 @@ class Agent {
   update() {
     this.amount = norm(this.life, this.lifeSpan, 0);
   }
+  checkLife() {
+    this.life--;
+    if (this.life == 0) {
+      this.isDead = true;
+    }
+  }
+  run() {
+    this.show();
+    this.move();
+    this.update();
+    this.checkLife();
+  }
+}
+
+class Donut extends Agent {
+  constructor(x, y, lifespan, color) {
+    super(x, y, lifespan);
+    this.d = width * random(0.08, 0.05);
+    this.shiftY = -height / 2;
+    this.clr = color;
+    this.sw = this.d;
+  }
+  show() {
+    push();
+    translate(this.x, this.y);
+    noStroke();
+    fill(this.clr);
+    beginShape();
+    for (let a = 0; a < TAU; a += TAU / 360) {
+      let r = (this.d / 2) * easeOutExpo(this.amount);
+      vertex(r * cos(a), r * sin(a));
+    }
+    beginContour();
+    for (let a = TAU; a > 0; a -= TAU / 360) {
+      let r = (this.d / 2) * easeInQuart(this.amount);
+      vertex(r * cos(a), r * sin(a));
+    }
+    endContour();
+    endShape();
+    pop();
+  }
 }
 
 function easeOutCubic(x) {
@@ -36,44 +77,20 @@ function easeOutExpo(x) {
 function easeInQuart(x) {
   return x * x * x * x;
 }
-
+let donut;
 function setup() {
   createCanvas(900, 900);
   rectMode(CENTER);
-  d = width * random(0.08, 0.05);
-  clr = random(colors);
+  donut = new Donut(width / 2, height / 2, 90, random(colors));
 }
 
 function draw() {
   background(230);
-
-  life--;
-  if (life == 0) {
-    isDead = true;
-  }
-  amount = norm(life, lifeSpan, 0);
-  push();
-  translate(x, y);
-  noStroke();
-  fill(clr);
-  if (!isDead) {
-    beginShape();
-    for (let a = 0; a < TAU; a += TAU / 360) {
-      let r = (d / 2) * easeOutExpo(amount);
-      vertex(r * cos(a), r * sin(a));
-    }
-    beginContour();
-    for (let a = TAU; a > 0; a -= TAU / 360) {
-      let r = (d / 2) * easeInQuart(amount);
-      vertex(r * cos(a), r * sin(a));
-    }
-    endContour();
-    endShape();
+  donut.checkLife();
+  isDonutDead = donut.isDead;
+  if (!isDonutDead) {
+    donut.run();
   } else {
-    isDead = false;
-    life = lifeSpan;
-    d = width * random(0.12, 0.1);
-    clr = random(colors);
+    donut = new Donut(width / 2, height / 2, 90, random(colors));
   }
-  pop();
 }
