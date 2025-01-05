@@ -1,48 +1,26 @@
-let effects = [];
 let colors = ["#0d1b2a", "#1b263b", "#415a77", "#778da9", "#e0e1dd"];
-let donut, raindrop;
-let splashs = [];
-let splashCount = 50;
+let effects = [];
 
 function setup() {
   createCanvas(900, 900);
   rectMode(CENTER);
-  donut = new Donut(width / 2, height / 2, int(random(50, 40)), random(colors));
-  for (let i = 0; i < splashCount; i++) {
-    let splash = new Splash(
-      width / 2,
-      height / 2,
-      int(random(90, 120)),
-      random(colors)
-    );
-    splashs.push(splash);
-  }
 }
 
 function draw() {
-  background(255);
-  if (!donut.isDead) donut.run();
-  if (!splashs[0].isDead) {
-    for (let i = 0; i < splashCount; i++) {
-      splashs[i].run();
+  background(252);
+
+  for (let i of effects) {
+    i.run();
+  }
+  for (let i = 0; i < effects.length; i++) {
+    if (effects[i].isDead) {
+      effects.splice(i, 1);
     }
-  } else {
-    splashs = [];
-    for (let i = 0; i < splashCount; i++) {
-      let splash = new Splash(
-        width / 2,
-        height / 2,
-        int(random(90, 120)),
-        random(colors)
-      );
-      splashs.push(splash);
-    }
-    donut = new Donut(
-      width / 2,
-      height / 2,
-      int(random(50, 40)),
-      random(colors)
-    );
+  }
+  if (frameCount % 10 == 0) {
+    let x = random(width);
+    let y = random(0, 1) * height;
+    effects.push(new EffectGroup(x, y));
   }
 }
 
@@ -56,6 +34,47 @@ function easeOutExpo(x) {
 
 function easeInQuart(x) {
   return x * x * x * x;
+}
+
+class EffectGroup {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.isDead = false;
+    this.agents = [];
+    this.clr = random(colors);
+    this.agents.push(
+      new Raindrop(this.x, this.y, int(random(90, 120)), this.clr)
+    );
+    this.count = 0;
+  }
+
+  run() {
+    for (let o of this.agents) {
+      o.run();
+    }
+    for (let i = 0; i < this.agents.length; i++) {
+      if (this.agents[i].isDead) {
+        this.agents.splice(i, 1);
+      }
+    }
+    if (this.agents.length == 0 && this.count == 0) {
+      this.count++;
+    }
+    if (this.count == 1) {
+      this.agents.push(
+        new Donut(this.x, this.y, int(random(50, 40)), this.clr)
+      );
+      for (let i = 0; i < 50; i++) {
+        this.agents.push(new Splash(this.x, this.y, int(random(90, 120))));
+      }
+      this.count++;
+    } else if (this.count == 2) {
+      if (this.agents.length == 0) {
+        this.isDead = true;
+      }
+    }
+  }
 }
 
 class Agent {
@@ -128,9 +147,10 @@ class Raindrop extends Agent {
   show() {
     push();
     translate(this.x, this.y);
+    // rotate(this.revo);
     noStroke();
     fill(this.clr);
-    ellipse(
+    rect(
       0,
       this.shiftY * (1 - this.amount ** 3),
       this.w * (1 - this.amount < 0.5 ? 0.5 : 1 - this.amount),
@@ -143,7 +163,7 @@ class Raindrop extends Agent {
 class Splash extends Agent {
   constructor(x, y, lifeSpan, clr) {
     super(x, y, lifeSpan);
-    this.shapeType = int(random(4));
+    this.shapeType = int(random(7));
     this.w = width * random(0.05, 0.01);
     let r = this.w * random(1, 4);
     let a = random(TAU);
@@ -186,7 +206,38 @@ class Splash extends Agent {
       stroke(this.clr);
       strokeWeight(sw);
       point(x, y);
+    } else if (this.shapeType == 4) {
+      push();
+      let x = this.xShift * easeOutCubic(this.amount); // + r;
+      let y = this.yShift * easeOutCubic(this.amount); // + r;
+      translate(x, y);
+      rotate(this.revo * 2 * easeOutCubic(this.amount));
+      noStroke();
+      fill(this.clr);
+      rect(0, 0, width * 0.05 * (1 - easeOutCubic(this.amount)));
+      pop();
+    } else if (this.shapeType == 5) {
+      push();
+      let x = this.xShift * easeOutExpo(this.amount);
+      let y = this.yShift * easeOutExpo(this.amount);
+      let d = this.w * (1 - easeOutCubic(this.amount));
+      translate(x, y);
+      rotate(random(TAU));
+      noStroke();
+      fill(this.clr);
+      rect(0, 0, d, d);
+      pop();
+    } else if (this.shapeType == 6) {
+      push();
+      let x = this.xShift * easeOutExpo(this.amount);
+      let y = this.yShift * easeOutExpo(this.amount);
+      translate(x, y);
+      noStroke();
+      fill(this.clr);
+      if (random() < 0.5) rect(0, 0, width * 0.05 * (1 - this.amount));
+      pop();
     }
+
     pop();
   }
 }
