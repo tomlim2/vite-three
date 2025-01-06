@@ -41,6 +41,7 @@ class Shape {
     this.petalSize1 = 0;
     this.petalPosition0 = this.d * 0.5 - this.petalSize0 * .7;
     this.petalPosition1 = this.d * 0.5;
+    this.init();
     this.clr1 = this.clr2 = random(colors);
     while (this.clr1 == this.clr2) {
       this.clr2 = random(colors);
