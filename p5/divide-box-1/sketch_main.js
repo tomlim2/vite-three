@@ -1,18 +1,24 @@
-/*
-By Okazz
-*/
 let colors = [
-  "#f70640",
-  "#f78e2c",
-  "#fdd903",
-  "#cae509",
-  "#63be93",
-  "#81cfe5",
-  "#299dbf",
-  "#38187d",
-  "#a4459f",
-  "#f654a9",
-  "#2F0A30",
+  "#0A1D37",
+  "#0B3954",
+  "#16658A",
+  "#2F6690",
+  "#187BCD",
+  "#3083DC",
+  "#527DC6",
+  "#64C2F5",
+  "#81DAF5",
+  "#A0E1FA",
+  "#243E73",
+  "#113259",
+  "#2A5B97",
+  "#1D4D8F",
+  "#326EB8",
+  "#4C8EC6",
+  "#6FB1D6",
+  "#8BC7E2",
+  "#A6DDF0",
+  "#C2ECF9",
 ];
 // let colors = [];
 let ctx;
@@ -34,9 +40,9 @@ function setup() {
 }
 
 function draw() {
-  background(0);
-  // fill("#f5f8fc");
+  background("#f0f0f0");
   for (let i of rects) {
+    fill(i.col);
     rect(i.x, i.y, i.w + 1, i.h + 1);
   }
 }
@@ -71,7 +77,6 @@ function divideRect(x, y, w, h, n) {
       divideRect(x, yy + (h - hh) / 2, w, h - hh, n);
     }
   } else {
-    
     rects.push(new Rect(x, y, w, h));
   }
 }
@@ -82,6 +87,7 @@ class Rect {
     this.y = y;
     this.w = w;
     this.h = h;
+    this.col = random(colors);
     this.t = -0;
     this.t1 = 30;
     this.t2 = 10 + this.t1;
