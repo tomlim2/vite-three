@@ -8,6 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "p5.brush": "^1.1.4",
     "three": "^0.171.0",
     "wiggle": "^0.0.17"
   },
