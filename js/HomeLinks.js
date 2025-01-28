@@ -1,11 +1,12 @@
 const linkInfoList = [
-  ["p5-motion-1-fragment", "p5", "motion-1-fragment"],
-  ["p5-motion-1-2025", "p5", "motion-1-2025"],
-  ["p5-rain-splash-1", "p5", "rain-splash-1"],
-  ["p5-rain-splash-2", "p5", "rain-splash-2"],
-  ["p5-rolling-squares-1", "p5", "rolling-squares-1"],
-  ["p5-petal-1", "p5", "petal-1"],
-  ["pokemon-card", "etc", "pokemon-card"],
+  ["p5-divide-box-1", "p5", "divide-box-1", "250118"],
+  ["p5-motion-1-fragment", "p5", "motion-1-fragment", "000000"],
+  ["p5-motion-1-2025", "p5", "motion-1-2025", "000000"],
+  ["p5-rain-splash-1", "p5", "rain-splash-1", "000000"],
+  ["p5-rain-splash-2", "p5", "rain-splash-2", "000000"],
+  ["p5-rolling-squares-1", "p5", "rolling-squares-1", "250117"],
+  ["p5-petal-1", "p5", "petal-1", "000000"],
+  ["pokemon-card", "etc", "pokemon-card", "000000"],
 ];
 
 class LinkMakingTool {
@@ -13,7 +14,7 @@ class LinkMakingTool {
     this.linkInfoList = linkInfoList;
   }
 
-  createHTMLNode(href, displayName) {
+  createLinkNode(href, displayName) {
     return `<li><a href="${href}">${displayName}</a></li>`;
   }
 
@@ -27,7 +28,8 @@ class LinkMakingTool {
       const toARefList = this.linkInfoList.map((linkInfoArray) => {
         const displayName = linkInfoArray[0];
         const href = this.makeHrefInnerPath(linkInfoArray);
-        return this.createHTMLNode(href, displayName);
+        
+        return this.createLinkNode(href, displayName);
       });
       documentLinkList.innerHTML = toARefList.join("");
     }
