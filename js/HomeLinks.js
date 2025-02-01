@@ -46,7 +46,7 @@ class LinkMakingTool {
       } else {
         categoryLinkStructureList.push({
           categoryName,
-          linkList: [i],
+          linkList: [linkInfoArray],
         });
       }
     }
