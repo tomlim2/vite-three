@@ -21,48 +21,53 @@ class LinkMakingTool {
     return `<li><a href="${href}">${displayName}</a></li>`;
   }
 
-  makeHrefInnerPath(linkInfoArray) {
+  createHrefInnerPath(linkInfoArray) {
     return `/${linkInfoArray[1]}/${linkInfoArray[2]}/index.html`;
+  }
+
+  sortLinkInfoList() {
+    const categoryLinkStructureList = [];
+    for (let i = 0; i < this.linkInfoList.length; i++) {
+      const linkInfoArray = this.linkInfoList[i];
+      const categoryName = linkInfoArray[1];
+      const hasLinkStructure = categoryLinkStructureList.find(
+        (categoryLinkStructure) =>
+          categoryLinkStructure.categoryName === categoryName
+      );
+
+      if (hasLinkStructure) {
+        hasLinkStructure.linkList.push(linkInfoArray);
+      } else {
+        categoryLinkStructureList.push({
+          categoryName,
+          linkList: [i],
+        });
+      }
+    }
+    return categoryLinkStructureList;
   }
 
   renderLinks() {
     const documentLinkList = document.getElementById("work-list");
-    const categoryLinkStructureList = [];
+
     if (documentLinkList) {
-      for (let i; i < this.linkInfoList.length; i++) {
-        const categoryName = i[1];
-        const hasLinkStructure = categoryLinkStructureList.find(
-          (categoryLinkStructure) =>
-            categoryLinkStructure.categoryName === categoryName
-        );
+      const categoryLinkStructureList = this.sortLinkInfoList();
+      const toCategoryLinkList = categoryLinkStructureList.map(
+        (categoryLinkStructure) => {
+          const categoryName = categoryLinkStructure.categoryName;
+          const linkList = categoryLinkStructure.linkList;
+          const toARefList = linkList.map((linkInfoArray) => {
+            const displayName = linkInfoArray[0];
+            const href = this.createHrefInnerPath(linkInfoArray);
 
-        if (hasLinkStructure) {
-          hasLinkStructure.linkList.push(i);
-        } else {
-          categoryLinkStructureList.push({
-            categoryName,
-            linkList: [i],
+            return this.createLinkNode(href, displayName);
           });
+
+          return `<li>${categoryName}<ul>${toARefList.join("")}</ul></li>`;
         }
-      }
+      );
 
-      // const toCategoryLinkList = categoryLinkStructureList.map(
-      //   (categoryLinkStructure) => {
-      //     const categoryName = categoryLinkStructure.categoryName;
-      //     const linkList = categoryLinkStructure.linkList;
-      //     const toARefList = linkList.map((linkInfoArray) => {
-      //       const displayName = linkInfoArray[0];
-      //       const href = this.makeHrefInnerPath(linkInfoArray);
-
-      //       return this.createLinkNode(href, displayName);
-      //     });
-
-      //     return `<li>${categoryName}<ul>${toARefList.join("")}</ul></li>`;
-      //   }
-      // );
-      console.log(categoryLinkStructureList, "documentLinkList");
-
-      // documentLinkList.innerHTML = toCategoryLinkList.join("");
+      documentLinkList.innerHTML = toCategoryLinkList.join("");
     }
   }
 }
