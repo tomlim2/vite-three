@@ -27,14 +27,42 @@ class LinkMakingTool {
 
   renderLinks() {
     const documentLinkList = document.getElementById("work-list");
+    const categoryLinkStructureList = [];
     if (documentLinkList) {
-      const toARefList = this.linkInfoList.map((linkInfoArray) => {
-        const displayName = linkInfoArray[0];
-        const href = this.makeHrefInnerPath(linkInfoArray);
-        
-        return this.createLinkNode(href, displayName);
-      });
-      documentLinkList.innerHTML = toARefList.join("");
+      for (let i; i < this.linkInfoList.length; i++) {
+        const categoryName = i[1];
+        const hasLinkStructure = categoryLinkStructureList.find(
+          (categoryLinkStructure) =>
+            categoryLinkStructure.categoryName === categoryName
+        );
+
+        if (hasLinkStructure) {
+          hasLinkStructure.linkList.push(i);
+        } else {
+          categoryLinkStructureList.push({
+            categoryName,
+            linkList: [i],
+          });
+        }
+      }
+
+      // const toCategoryLinkList = categoryLinkStructureList.map(
+      //   (categoryLinkStructure) => {
+      //     const categoryName = categoryLinkStructure.categoryName;
+      //     const linkList = categoryLinkStructure.linkList;
+      //     const toARefList = linkList.map((linkInfoArray) => {
+      //       const displayName = linkInfoArray[0];
+      //       const href = this.makeHrefInnerPath(linkInfoArray);
+
+      //       return this.createLinkNode(href, displayName);
+      //     });
+
+      //     return `<li>${categoryName}<ul>${toARefList.join("")}</ul></li>`;
+      //   }
+      // );
+      console.log(categoryLinkStructureList, "documentLinkList");
+
+      // documentLinkList.innerHTML = toCategoryLinkList.join("");
     }
   }
 }
