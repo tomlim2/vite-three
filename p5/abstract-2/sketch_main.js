@@ -1,135 +1,115 @@
-let objs = [];
 let colors = ["#FF6138", "#FFFF9D", "#BEEB9F", "#79BD8F", "#00A388"];
+
+let ctx;
+let circles = [];
+let motions = [];
+let noiseFilter;
+let trianglePosition;
 
 function setup() {
   createCanvas(900, 900);
   rectMode(CENTER);
-  let cx = width / 2;
-  let cy = height / 2;
-  let num = 35;
-  let w = width / num;
-  for (let i = 0; i < num; i++) {
-    for (let j = 0; j < num; j++) {
-      let x = i * w + w / 2;
-      let y = j * w + w / 2;
-      let dst = dist(x, y, width / 2, height / 2);
-      let t = int(map(dst, 0, sqrt(sq(width / 2, sq(height / 2))), -50, 0));
-      for (let k = 0; k < 3; k++) {
-        objs.push(new MJRC(x, y, w, t));
+  ctx = drawingContext;
+  trianglePosition = {
+    x1: width / 2,
+    y1: height * 0.15,
+    x2: width * 0.8,
+    y2: height * 0.88,
+    x3: width * 0.2,
+    y3: height * 0.88,
+  };
+
+  for (let i = 0; i < 10000; i++) {
+    let d = width * random(0.02, 0.08);
+    let y = random(trianglePositioin.y1, trianglePosition.y2);
+    let n = norm(y, trianglePosition.y1, trianglePosition.y2);
+    let x = width / 2 + random(-1, 1) * width * lerp(0, 0.3, n);
+    let newShape = { x, y, d };
+    let overlap = false;
+    for (let c of circles) {
+      if (checkCircleCollision(newShape, c)) {
+        overlap = true;
+        break;
       }
     }
+    if (!overlap) {
+      circles.push({ x, y, d });
+    }
   }
-  objs.sort((a, b) => {
-    let c = dist(a.x, a.y, cx, cy);
-    let d = dist(b.x, b.y, cx, cy);
-    return c - d;
-  });
+  for (let c of circles) {
+    motions.push(new motions(c.x, c.ymc.d));
+  }
+
+  noiseFilter = createImage(width, height);
+  noiseFilter.loadPixels();
+  let pix = noiseFilter.width * noiseFilter.height * 4;
+  for (let i = 0; i < pix; i += 4) {
+    let x = (i / 4) % noiseFilter.width;
+    let y = floor(map(i, 0, pix, 0, noiseFilter.height));
+    let alph = random(30);
+    let c = noise(y * 0.08, x * 0.08) * 240;
+    noiseFilter.pixels[i] = c;
+    noiseFilter.pixels[i + 1] = c;
+    noiseFilter.pixels[i + 2] = c;
+    noiseFilter.pixels[i + 3] = alph;
+  }
+  noiseFilter.updatePixels();
 }
 
 function draw() {
-  push();
-  translate(width / 2, height / 2);
-  scale(0.7);
-  translate(-width / 2, -height / 2);
   background(0);
-  for (let i of objs) {
-    i.show();
-    i.move();
+  noStroke();
+  fill("#0b770d");
+  triangle(
+    traianglePosition.x1,
+    trianglePosition.y1,
+    trianglePosition.x2,
+    trianglePosition.y2,
+    trianglePosition.x3,
+    trianglePosition.y3
+  );
+  for (let m of motions) {
+    m.show();
+    m.move();
   }
-  pop();
+  image(noiseFilter, 0, 0);
 }
 
-function easeInOutCirc(x) {
-  return x < 0.5
-    ? (1 - Math.sqrt(1 - Math.pow(x * x, 2))) / 2
-    : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
+function checkCircleCollision(a, b) {
+  let distSq = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
+  let radiusSum = a.d / 2 + b.d / 2;
+  return distSq < radiusSum ** 2;
 }
 
-class MJRC {
-  constructor(x, y, w, t) {
+function easeOutCirc(x) {
+  return sqrt(1 - Math.pow(x - 1, 2));
+}
+
+class Motion {
+  constructor(x, y, d) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = w;
-    this.cr = 0;
-    this.a = 0;
-
-    this.x0 = x;
-    this.y0 = y;
-    this.w0 = w;
-    this.h0 = w;
-    this.cr0 = 0;
-
-    this.x1 = this.x + this.w * random(-1, 1) * 5;
-    this.y1 = this.y + this.w * random(-1, 1) * 5;
-    this.w1 = this.w * random(0.25, 0.75);
-    this.h1 = this.w1;
-    this.cr1 = max(this.w1, this.h1);
-    this.a0 = 0;
-    this.a1 = random(-1, 1) * TAU;
-
-    this.alph0 = 0;
-    this.alph1 = 255;
-    this.alph = 0;
-
-    this.t = t;
-    this.t1 = 60;
-    this.t2 = this.t1 + 60;
-    this.t3 = this.t2 + 80;
-    this.col1 = color("#f0f0f0");
-    this.col2 = color(random(colors));
-    this.init();
-  }
-
-  show() {
-    push();
-    translate(this.x, this.y);
-    rotate(this.a);
-    fill(this.col);
-    noStroke();
-    rect(0, 0, this.w, this.h, this.cr);
-    pop();
-  }
-  move() {
-    if (0 < this.t && this.t < this.t1) {
-      let n = norm(this.t, 0, this.t1 - 1) ** 0.25;
-      this.x = lerp(this.x0, this.x1, n);
-      this.y = lerp(this.y0, this.y1, n);
-      this.w = lerp(this.w0, this.w1, n);
-      this.h = lerp(this.h0, this.h1, n);
-      this.cr = lerp(this.cr0, this.cr1, n);
-      this.z = lerp(this.a0, this.a1, n);
-      this.col = lerpColor(this.col1, this.col2, n ** 0.5);
+    this.d = d;
+    this.n = 4;
+    this.sw = d / this.n;
+    this.te = int(random(300, 600));
+    this.t = 0;
+    this.circles = [];
+    this.cols = [];
+    shuffle(colors, true);
+    for (let i = 0; i < this.n; i++) {
+      this.cols.push(colors[i % colors.length]);
+      this.circles.push(
+        new Circle(
+          0,
+          0,
+          this.d * 1.1,
+          -((this.te / this.n) * i) + this.te,
+          this.te,
+          this.cols[i]
+        )
+      );
     }
-
-    if (this.t1 < this.t && this.t < this.t2) {
-      let n = norm(this.t, this.t1, this.t2 - 1) ** 4;
-      this.x = lerp(this.x1, this.x0, n);
-      this.y = lerp(this.y1, this.y0, n);
-      this.w = lerp(this.w1, this.w0, n);
-      this.h = lerp(this.h1, this.h0, n);
-      this.cr = lerp(this.cr1, this.cr0, n);
-      this.a = lerp(this.a1, this.a0, n);
-      this.col = lerpColor(this.col2, this.col1, n ** 2);
-    }
-
-    if (this.t > this.t3) {
-      this.init();
-      this.t = 0;
-    }
-
-    this.t++;
-  }
-
-  init() {
-    this.x1 = this.x + this.w * random(-1, 1) * 5;
-    this.y1 = this.y + this.w * random(-1, 1) * 5;
-    this.w1 = this.w * random(0.25, 0.75);
-    this.h1 = this.w1;
-    this.cr1 = max(this.w1, this.h1);
-    this.a0 = 0;
-    this.a1 = random(-1, 1) * TAU;
-    this.col2 = color(random(colors));
-    this.col = this.col1;
+    this.count = 0;
   }
 }
