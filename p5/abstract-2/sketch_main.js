@@ -1,3 +1,5 @@
+import { stroke } from "p5.brush";
+
 let colors = ["#FF6138", "#FFFF9D", "#BEEB9F", "#79BD8F", "#00A388"];
 
 let ctx;
@@ -111,5 +113,41 @@ class Motion {
       );
     }
     this.count = 0;
+  }
+
+  show() {
+    push();
+    translate(this.x, this.y);
+    strokeWeight(0);
+    stroke(0);
+    noFill();
+    circle(0, 0, this.d);
+    drawingContext.clip();
+    for (leti = 0; i < this.circles.length; i++) {
+      let r = this.circles[i];
+      r.show();
+      r.move();
+    }
+    for (i = 0; i < this.circles.length; i++) {
+      let r = this.circles[i];
+      if (r.isDead) {
+        this.count++;
+        this.circles.splice(i, 1);
+        this.circles.push(
+          new Circle(
+            0,
+            0,
+            this.d * 1.1,
+            0,
+            this.te,
+            this.cols[this.count % this.cols.length]
+          )
+        );
+      }
+    }
+    pop();
+  }
+  move() {
+    this.t++;
   }
 }
