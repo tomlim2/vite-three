@@ -1,4 +1,4 @@
-import { stroke } from "p5.brush";
+import { fill, noStroke, stroke } from "p5.brush";
 
 let colors = ["#FF6138", "#FFFF9D", "#BEEB9F", "#79BD8F", "#00A388"];
 
@@ -149,5 +149,30 @@ class Motion {
   }
   move() {
     this.t++;
+  }
+}
+
+class Circle {
+  constructor(x, y, d, t0, t1, col) {
+    let th = random(TAU);
+    let r = random(0, 0.5) * d;
+    this.x0 = x + r * cos(th);
+    this.x1 = x;
+    this.y0 = y + r * sin(th);
+    this.y1 = y;
+    this.x = this.x0;
+    this.y = this.y0;
+
+    this.d = 0;
+    this.d1 = d;
+    this.t = t0;
+    this.t1 = t1;
+    this.isDead = false;
+    this.col = col;
+  }
+  show(){
+    noStroke();
+    fill(this.col);
+    circle(this.x, this.y, this.d);
   }
 }
