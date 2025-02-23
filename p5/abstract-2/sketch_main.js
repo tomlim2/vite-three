@@ -1,7 +1,25 @@
-import { fill, noStroke, stroke } from "p5.brush";
-
-let colors = ["#FF6138", "#FFFF9D", "#BEEB9F", "#79BD8F", "#00A388"];
-
+let colors = [
+  "#0A1D37",
+  "#0B3954",
+  "#16658A",
+  "#2F6690",
+  "#187BCD",
+  "#3083DC",
+  "#527DC6",
+  "#64C2F5",
+  "#81DAF5",
+  "#A0E1FA",
+  "#243E73",
+  "#113259",
+  "#2A5B97",
+  "#1D4D8F",
+  "#326EB8",
+  "#4C8EC6",
+  "#6FB1D6",
+  "#8BC7E2",
+  "#A6DDF0",
+  "#C2ECF9",
+];
 let ctx;
 let circles = [];
 let motions = [];
@@ -23,7 +41,7 @@ function setup() {
 
   for (let i = 0; i < 10000; i++) {
     let d = width * random(0.02, 0.08);
-    let y = random(trianglePositioin.y1, trianglePosition.y2);
+    let y = random(trianglePosition.y1, trianglePosition.y2);
     let n = norm(y, trianglePosition.y1, trianglePosition.y2);
     let x = width / 2 + random(-1, 1) * width * lerp(0, 0.3, n);
     let newShape = { x, y, d };
@@ -39,7 +57,7 @@ function setup() {
     }
   }
   for (let c of circles) {
-    motions.push(new motions(c.x, c.ymc.d));
+    motions.push(new Motion(c.x, c.y, c.d));
   }
 
   noiseFilter = createImage(width, height);
@@ -61,9 +79,9 @@ function setup() {
 function draw() {
   background(0);
   noStroke();
-  fill("#0b770d");
+  fill("#A6DDF0");
   triangle(
-    traianglePosition.x1,
+    trianglePosition.x1,
     trianglePosition.y1,
     trianglePosition.x2,
     trianglePosition.y2,
@@ -123,12 +141,12 @@ class Motion {
     noFill();
     circle(0, 0, this.d);
     drawingContext.clip();
-    for (leti = 0; i < this.circles.length; i++) {
+    for (let i = 0; i < this.circles.length; i++) {
       let r = this.circles[i];
       r.show();
       r.move();
     }
-    for (i = 0; i < this.circles.length; i++) {
+    for (let i = 0; i < this.circles.length; i++) {
       let r = this.circles[i];
       if (r.isDead) {
         this.count++;
@@ -170,9 +188,21 @@ class Circle {
     this.isDead = false;
     this.col = col;
   }
-  show(){
+  show() {
     noStroke();
     fill(this.col);
     circle(this.x, this.y, this.d);
+  }
+  move() {
+    if (0 < this.t && this.t < this.t1) {
+      let n = norm(this.t, 0, this.t1 - 1);
+      this.d = lerp(0, this.d1, easeOutCirc(n));
+      this.x = lerp(this.x0, this.x1, easeOutCirc(n));
+      this.y = lerp(this.y1, this.y1, easeOutCirc(n));
+    }
+    if (this.t > this.t1) {
+      this.isDead = true;
+    }
+    this.t++;
   }
 }
