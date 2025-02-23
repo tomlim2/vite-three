@@ -1,6 +1,7 @@
 const linkInfoArrayList = [
   ["p5-form-1", "p5", "form-1", "250131"],
   ["p5-abstract-1", "p5", "abstract-1", "250130"],
+  ["p5-abstract-2", "p5", "abstract-2", "250211"],
   ["p5-divide-box-1", "p5", "divide-box-1", "250118"],
   ["p5-divide-box-brush-1", "p5", "divide-box-brush-1", "250128"],
   ["p5-motion-1-fragment", "p5", "motion-1-fragment", "000000"],
@@ -22,7 +23,7 @@ class LinkMakingTool {
   }
 
   createCategoryNode(categoryName, linkNodes) {
-    return `<li><span>${categoryName}</span><ul>${linkNodes.join(
+    return `<li class="li-category"><span>${categoryName}</span><ul>${linkNodes.join(
       ""
     )}</ul></li>`;
   }
