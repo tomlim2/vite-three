@@ -107,7 +107,7 @@ class Shape {
     }
   }
 
-  darwBox() {
+  drawBox() {
     let hw = this.w / 2;
     beginShape(QUARD);
     fill(this.clrs[0]);
@@ -145,6 +145,7 @@ class Shape {
     vertex(hw, hw, -hw);
     vertex(hw, -hw, -hw);
     vertex(hw, -hw, hw);
+
     endShape();
   }
 }
