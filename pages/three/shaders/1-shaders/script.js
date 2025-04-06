@@ -42,7 +42,7 @@ geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms, 1));
 // Material
 const material =
 	//new THREE.MeshBasicMaterial({color: 'orange'})
-	new THREE.RawShaderMaterial({
+	new THREE.ShaderMaterial({
 	vertexShader: testVertexShader,
 	fragmentShader: testfragmentShader,
 	uniforms: {
