@@ -37,7 +37,7 @@ class LinkMakingTool {
 		path += `${dirStructure[i]}/`;
     }
 	console.log(path);
-    return `/${path}/index.html`;
+    return `/pages/${path}/index.html`;
   }
 
   getSortLinkInfoArray() {
