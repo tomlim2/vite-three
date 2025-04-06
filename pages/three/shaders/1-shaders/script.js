@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import GUI from "lil-gui";
-import testVertexShader from "../shaders/test/vertex.glsl";
-import testfragmentShader from "../shaders/test/fragment.glsl";
+import testVertexShader from "./test/vertex.glsl";
+import testfragmentShader from "./test/fragment.glsl";
 
 /**
  * Base
@@ -20,6 +20,9 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const flagTexture = textureLoader.load('/textures/flag-french.jpg');
+console.log(flagTexture);
+
 
 /**
  * Test mesh
@@ -46,6 +49,7 @@ const material =
 		uFrequency: { value: new THREE.Vector2(10, 5)},
 		uTime: { value: 0 },
 		uColor: { value: new THREE.Color('orange') },
+		uTexture: { value: flagTexture }
 	},
 });
 
