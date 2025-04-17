@@ -1,5 +1,7 @@
 const linkInfoArrayList = [
+	["bezierCurves", ["three", "bezierCurves"], "250417"],
 	["shaders", ["three", "shaders", "1-shaders"], "250403"],
+	["shaders", ["three", "shaders", "2-shader-patterns"], "250406"],
 	["three-setup", ["three", "glsl", "setup"], "250130"],
 	["p5-form-1", ["p5", "form-1"], "250131"],
 	["p5-abstract-1", ["p5", "abstract-1"], "250130"],
@@ -37,7 +39,7 @@ class LinkMakingTool {
 		path += `${dirStructure[i]}/`;
     }
 	console.log(path);
-    return `/pages/${path}/index.html`;
+    return `/pages/${path}index.html`;
   }
 
   getSortLinkInfoArray() {
