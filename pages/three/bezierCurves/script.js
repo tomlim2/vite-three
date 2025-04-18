@@ -69,13 +69,14 @@ const geometry = new ParametricGeometry(
 
 let playhead = uniform(0.0);
 
-let myMap = new THREE.TextureLoader().load("/textures/pattern-random-01.jpg");
+let myMap = new THREE.TextureLoader().load("/textures/pattern-random-02.png");
 myMap.colorSpace = THREE.SRGBColorSpace;
 myMap.minFilter = THREE.LinearMipMapLinearFilter;
 myMap.magFilter = THREE.LinearFilter;
 myMap.wrapS = THREE.RepeatWrapping;
 myMap.wrapT = THREE.RepeatWrapping;
 myMap.repeat.set(1, 1);
+myMap.flipY = true;
 
 const material = new THREE.MeshPhysicalNodeMaterial();
 material.color.set(0x000099);
@@ -84,19 +85,19 @@ material.metalness = 0.5;
 material.side = DoubleSide;
 
 let caluculated = Fn(() => {
-	let row = abs(floor(fract(uv().y.add(playhead)).mul(20)));
+	let row = floor(fract(uv().y.add(playhead)).mul(20));
 	let randomValue = fract(sin(row.mul(123)).mul(345678.123));
   
 	let newuv = uv().toVar();
-	newuv.x.mulAssign(7);
-	newuv.y.add(playhead);
-	newuv.x = fract(newuv.x);
-	newuv.y = newuv.y.mul(1);
-
-	let rowSpeed = randomValue.mul(15).add(0.5);
+	
+	let rowSpeed = randomValue.mul(-1).add(0.5);
 	newuv.x.addAssign(playhead.mul(rowSpeed));
 	
-  //   return vec4(newuv, 0, 1);
+	newuv.y.add(playhead);
+	newuv.x.mulAssign(-7);
+	newuv.y.addAssign(playhead);
+	newuv.y = newuv.y.mul(10);
+	
   return texture(myMap, newuv).r.oneMinus();
   });
 
