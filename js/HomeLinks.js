@@ -8,6 +8,7 @@ const linkInfoArrayList = [
 	["p5-abstract-2", ["p5", "abstract-2"], "250211"],
 	["p5-abstract-3", ["p5", "abstract-3"], "250302"],
 	["p5-divide-box-1", ["p5", "divide-box-1"], "250118"],
+	["p5-divide-box-2", ["p5", "divide-box-2"], "250419"],
 	["p5-divide-box-brush-1", ["p5", "divide-box-brush-1"], "250128"],
 	["p5-motion-1-fragment", ["p5", "motion-1-fragment"], "000000"],
 	["p5-motion-1-2025", ["p5", "motion-1-2025"], "000000"],

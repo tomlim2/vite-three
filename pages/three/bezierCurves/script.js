@@ -96,9 +96,9 @@ let caluculated = Fn(() => {
 	newuv.y.add(playhead);
 	newuv.x.mulAssign(-7);
 	newuv.y.addAssign(playhead);
-	newuv.y = newuv.y.mul(10);
+	newuv.y = newuv.y.mul(20);
 	
-  return texture(myMap, newuv).r.oneMinus();
+  return texture(myMap, newuv);
   });
 
 material.colorNode = caluculated();
@@ -132,6 +132,6 @@ document.body.appendChild(renderer.domElement);
 function animate(time) {
   //   mesh.rotation.x = time / 2000;
   //   mesh.rotation.y = time / 1000;
-  playhead.value = - time / 15000;
+  playhead.value = time / 50000;
   renderer.renderAsync(scene, camera);
 }
