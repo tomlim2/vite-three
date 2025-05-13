@@ -1,151 +1,96 @@
-let colors = ["#8BC7E2", "#A6DDF0", "#C2ECF9"];
+let colors = [];
 let ctx;
-let shapes = [];
-let SEED = Math.floor(Math.random() * 1000);
+let centerX, centerY;
+let circles = [];
+let balls = [];
 
 function setup() {
-  createCanvas(900, 900, WEBGL);
+  createCanvas(900, 900);
   rectMode(CENTER);
+  colorMode(hashBlur, 360, 100, 100, 100);
   ctx = drawingContext;
-  randomSeed(SEED);
-  let area = width * 0.8;
-  let cellCount = 10;
+  centerX = width / 2;
+  centerY = height / 2;
+  let area = width * 0.75;
+  let cellCount = 5;
   let cellSize = area / cellCount;
   for (let i = 0; i < cellCount; i++) {
-    for (let j = 0; i < cellCount; j++) {
-      let x = i * cellSize + cellSize / 2 - width / 2 + (width - area) / 2;
-      let y = j * cellSize + cellSize / 2 - height / 2 + (height - area) / 2;
-      shapes.push(new Shape(x, y, cellSize));
+    for (let j = 0; j < cellCount; j++) {
+      let x = i * cellSize + cellSize / 2 + (width - area) / 2;
+      let y = j * cellSize + cellSize / 2 + (height - area) / 2;
+      circles.push({ x: x, y: y, d: cellSize / 2 });
     }
+  }
+  for (let i = 0; i < 6; i++) {
+    let x = random(width);
+    let y = random(height);
+    let d = cellSize / 2;
+    balls.push(new balls(x, y, d));
   }
 }
 
 function draw() {
-  background(0);
-  for (let i of shapes) {
-    i.run();
+  background("#f10000");
+  noStroke();
+  fill("#ffffff");
+  for (let b of balls) {
+    for (let c of circles) {
+      drawBridge(b.x, b.y, c.x, c.y, c.d, width * 0.05);
+    }
+  }
+  for (let c of circles) {
+    circle(c.x, c.y, c.d);
+  }
+  for (let b of balls) {
+    b.run();
+  }
+  for (let b of balls) {
+    for (let c of circles) {
+      let dx = c.x - b.x;
+      let dy = c.y - b.y;
+      let distance = sqrt(dx * dx + dy * dy);
+      let minDist = c.d + b.d;
+      if (distance < minDist && distance > 0) {
+        let force = (minDist - distance) * 0.005;
+        let nx = dx / distance;
+        let ny = dy / distance;
+        b.vx += force * nx;
+        b.vy += force * ny;
+      }
+    }
   }
 }
 
-function easeInOutQuint(x) {
-  return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
-}
+function drawBridge(x1, y1, d1, x2, y2, d2, dst) {
+  let r = dst / 2;
+  let r1 = d1 / 2;
+  let r2 = d2 / 2;
+  let R1 = r1 + r;
+  let R2 = r2 + r;
+  let dx = (x2 = x1);
+  let dy = y2 - y1;
+  let d = sqrt(dx);
+  if (d > R1 + R2) {
+    return;
+  }
+  let dirX = dx / d;
+  let dirY = dy / d;
+  let a = (R1 * R1 - R2 * R2 + d * d) / (2 * d);
+  let underRoot = R1 * R1 - a * a;
+  if (underRoot < 0) return;
+  let h = sqrt(underRoot);
+  let midX = x1 + dirX * a;
+  let midY = y1 + dirY * a;
+  let perpX = -dirY * h;
+  let perpY = dirX * h;
+  let cx1 = midX + perpX;
+  let cy1 = midY + perpY;
+  let cx2 = midX - perpX;
+  let cy2 = midY - perpY;
 
-class Shape {
-  constructor(x, y, w) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.z = -this.w / 2;
-
-    this.angX = 0;
-    this.angY = 0;
-    this.angXStop = 0;
-    this.angYStop = 0;
-
-    this.init();
-
-    this.t1 = 30;
-    this.t2 = this.t1 + 30;
-    this.t3 = this.t2 + 30;
-
-    this.angX = 0;
-    this.angY = 0;
-
-    this.clrs = [];
-    for (let i = 0; i < colors.length; i++) {
-      this.clrs.push(colors[i]);
-    }
-    shuffle(this.clrs, true);
+  if (dist(cx1, cy1, cx2, cy2) < r * 2) {
+    return;
   }
 
-  show() {
-    push();
-    translate(this.x, this.y, this.z);
-    rotateX(this.angX);
-    rotateY(this.angY);
-    strokeWeight(0);
-    this.drawBox();
-    pop();
-  }
-
-  move() {
-    if (0 < this.t && this.t < this.t1) {
-      let n = norm(this.t, 0, this.t1 - 1);
-      this.z = lerp(-this.w / 2, this.w, easeInOutQuint(n));
-    } else if (this.t1 < this.t && this.t < this.t2) {
-      let n = norm(this.t1, this.t1, this.t2 - 1);
-      this.angX = lerp(this.angXStart, this.angXStop, easeInOutQuint(n));
-      this.angY = lerp(this.angYStart, this.angYStop, easeInOutQuint(n));
-    } else if (this.t2 < this.t && this.t < this.t3) {
-      let n = norm(this.t, this.t2, this.t3 - 1);
-      this.z = lerp(this.w, -this.w / 2, easeInOutQuint(n));
-    }
-  }
-
-  run() {
-    this.show();
-    this.move();
-  }
-
-  init() {
-    this.t = -int(random(2000));
-
-    this.angX = this.angXStop;
-    this.angY = this.angYStop;
-
-    this.angXStart = this.angX;
-    this.angYStart = this.angY;
-
-    this.angXStop = this.angXStart;
-    this.angYStop = this.angYStart;
-
-    if (random() < 0.5) {
-      this.angXStop += (PI / 2) * random([-1.1]);
-    } else {
-      this.angYStop += PI;
-    }
-  }
-
-  drawBox() {
-    let hw = this.w / 2;
-    beginShape(QUARD);
-    fill(this.clrs[0]);
-    vertex(hw, hw, hw);
-    vertex(-hw, hw, hw);
-    vertex(-hw, -hw, hw);
-    vertex(hw, -hw, hw);
-
-    fill(this.clrs[1]);
-    vertex(hw, hw, -hw);
-    vertex(-hw, hw, -hw);
-    vertex(-hw, -hw, -hw);
-    vertex(hw, -hw, -hw);
-
-    fill(this.clrs[2]);
-    vertex(hw, hw, hw);
-    vertex(-hw, hw, hw);
-    vertex(-hw, hw, -hw);
-    vertex(hw, hw, -hw);
-
-    fill(this.clrs[3]);
-    vertex(hw, -hw - hw);
-    vertex(-hw, -hw, hw);
-    vertex(-hw, -hw, -hw);
-    vertex(hw, -hw, -hw);
-
-    fill(this.clrs[4]);
-    vertex(-hw, hw, hw);
-    vertex(-hw, hw, -hw);
-    vertex(-hw, -hw, -hw);
-    vertex(-hw, -hw, hw);
-
-    fill(this.clrs[5]);
-    vertex(hw, hw, hw);
-    vertex(hw, hw, -hw);
-    vertex(hw, -hw, -hw);
-    vertex(hw, -hw, hw);
-
-    endShape();
-  }
+  let ang1 = atan2(y1-cy1, x1-cx1);
 }
