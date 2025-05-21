@@ -7,7 +7,7 @@ let balls = [];
 function setup() {
   createCanvas(900, 900);
   rectMode(CENTER);
-  colorMode(hashBlur, 360, 100, 100, 100);
+  colorMode(HSB, 360, 100, 100, 100);
   ctx = drawingContext;
   centerX = width / 2;
   centerY = height / 2;
@@ -25,22 +25,24 @@ function setup() {
     let x = random(width);
     let y = random(height);
     let d = cellSize / 2;
-    balls.push(new balls(x, y, d));
+    balls.push(new Ball(x, y, d));
   }
 }
 
 function draw() {
-  background("#f10000");
+  background("#000000");
   noStroke();
   fill("#ffffff");
   for (let b of balls) {
     for (let c of circles) {
-      drawBridge(b.x, b.y, c.x, c.y, c.d, width * 0.05);
+      drawBridge(b.x, b.y, b.d, c.x, c.y, c.d, width * 0.05);
     }
   }
+
   for (let c of circles) {
     circle(c.x, c.y, c.d);
   }
+
   for (let b of balls) {
     b.run();
   }
@@ -67,9 +69,9 @@ function drawBridge(x1, y1, d1, x2, y2, d2, dst) {
   let r2 = d2 / 2;
   let R1 = r1 + r;
   let R2 = r2 + r;
-  let dx = (x2 = x1);
+  let dx = x2 - x1;
   let dy = y2 - y1;
-  let d = sqrt(dx);
+  let d = sqrt(dx * dx + dy * dy);
   if (d > R1 + R2) {
     return;
   }
@@ -92,5 +94,60 @@ function drawBridge(x1, y1, d1, x2, y2, d2, dst) {
     return;
   }
 
-  let ang1 = atan2(y1-cy1, x1-cx1);
+  let ang1 = atan2(y1 - cy1, x1 - cx1);
+  let ang2 = atan2(y2 - cy1, x2 - cx1);
+  let ang3 = atan2(y2 - cy2, x2 - cx2);
+  let ang4 = atan2(y1 - cy2, x1 - cx2);
+
+  if (ang2 < ang1) {
+    ang2 += TAU;
+  }
+
+  beginShape();
+  for (let i = ang1; i < ang2; i += TAU / 180) {
+    vertex(cx1 + r * cos(i), cy1 + r * sin(i));
+  }
+
+  if (ang4 < ang3) {
+    ang4 += TAU;
+  }
+  for (let i = ang3; i < ang4; i += TAU / 180) {
+    vertex(cx2 + r * cos(i), cy2 + r * sin(i));
+  }
+  endShape(CLOSE);
+}
+
+class Ball {
+  constructor(x, y, d) {
+    this.x = x;
+    this.y = y;
+    this.d = d;
+    this.vx = (random([-1, 1]) * width) / 300;
+    this.vy = (random([-1, 1]) * width) / 300;
+  }
+
+  show() {
+    noStroke();
+    fill("#ffffff");
+    circle(this.x, this.y, this.d);
+  }
+
+  move() {
+    this.x += this.vx;
+    this.y += this.vy;
+    let radius = this.d / 2;
+    if (this.x < radius || this.x > width - radius) {
+      this.vx *= -1;
+    }
+    if (this.y < radius || this.y > height - radius) {
+      this.vy *= -1;
+    }
+    this.x = constrain(this.x, radius, width - radius);
+    this.y = constrain(this.y, radius, height - radius);
+  }
+
+  run() {
+    this.show();
+    this.move();
+  }
 }
