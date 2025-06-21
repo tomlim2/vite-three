@@ -11,6 +11,7 @@ const linkInfoArrayList = [
 	["p5-abstract-3", ["p5", "abstract-3"], "250302"],
 	["p5-abstract-4", ["p5", "abstract-4"], "250502"],
 	["p5-abstract-5", ["p5", "abstract-5"], "250521"],
+	["p5-abstract-6-random-line", ["p5", "abstract-6-random-line"], "250521"],
 	["p5-typo-1", ["p5", "abstract-5"], "250528"],
 	["p5-divide-box-1", ["p5", "divide-box-1"], "250118"],
 	["p5-divide-box-2", ["p5", "divide-box-2"], "250419"],
