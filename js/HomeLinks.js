@@ -1,4 +1,6 @@
 const linkInfoArrayList = [
+	["basic", ["three", "boiler-plates", "basic"], "250130"],
+	["shader", ["three", "boiler-plates", "shader"], "250130"],
 	["bezierCurves", ["three", "bezierCurves"], "250417"],
 	["shaders", ["three", "shaders", "1-shaders"], "250403"],
 	["shaders", ["three", "shaders", "2-shader-patterns"], "250406"],
