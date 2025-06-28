@@ -25,6 +25,9 @@ let centerX, centerY;
 let bubbles = [];
 
 function setup() {
+	const oldCanvas = document.querySelector('canvas');
+	if (oldCanvas) oldCanvas.remove();
+
   createCanvas(900, 900);
   rectMode(CENTER);
   colorMode(HSB, 360, 100, 100, 100);

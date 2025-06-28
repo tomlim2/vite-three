@@ -4,44 +4,47 @@ let centerX, centerY;
 let rings = [];
 
 function setup() {
-  createCanvas(740, 740);
-  rectMode(CENTER);
-  colorMode(HSB, 360, 100, 100, 100);
-  ctx = drawingContext;
-  centerX = width / 2;
-  centerY = height / 2;
-  init();
+	const oldCanvas = document.querySelector('canvas');
+    if (oldCanvas) oldCanvas.remove();
+
+	createCanvas(740, 740);
+	rectMode(CENTER);
+	colorMode(HSB, 360, 100, 100, 100);
+	ctx = drawingContext;
+	centerX = width / 2;
+	centerY = height / 2;
+	init();
 }
 
 function draw() {
-  background("#010101");
-  for (let r of rings) {
-    r.run();
-  }
-  if (frameCount % 120 == 0) {
-    init();
-  }
+	background("#010101");
+	for (let r of rings) {
+		r.run();
+	}
+	if (frameCount % 120 == 0) {
+		init();
+	}
 }
 
 function init() {
-  rings = [];
-  let cellCount = 11;
-  let gridArea = width * 1.1;
-  let cellSize = gridArea / cellCount;
-  let w = cellSize * 0.25;
-  for (let j = 0; j < cellCount; j++) {
-    for (let i = 0; i < cellCount; i++) {
-      let x = i * cellSize + cellSize / 2 + (width - gridArea) / 2;
-      let y = j * cellSize + cellSize / 2 + (height - gridArea) / 2;
-      let dst = dist(x, y, centerX, centerY);
-      let t = map(dst, 0, sqrt(sq(width / 2) + sq(height / 2)), 0, -90);
-      rings.push(new Shape(x, y, w, t));
-    }
-  }
+	rings = [];
+	let cellCount = 11;
+	let gridArea = width * 1.1;
+	let cellSize = gridArea / cellCount;
+	let w = cellSize * 0.25;
+	for (let j = 0; j < cellCount; j++) {
+		for (let i = 0; i < cellCount; i++) {
+			let x = i * cellSize + cellSize / 2 + (width - gridArea) / 2;
+			let y = j * cellSize + cellSize / 2 + (height - gridArea) / 2;
+			let dst = dist(x, y, centerX, centerY);
+			let t = map(dst, 0, sqrt(sq(width / 2) + sq(height / 2)), 0, -90);
+			rings.push(new Shape(x, y, w, t));
+		}
+	}
 }
 
 function easeInOutQuart(x) {
-  return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+	return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
 }
 
 class Shape {
@@ -82,22 +85,22 @@ class Shape {
 	}
 
 	show() {
-        push();
-        translate(this.x, this.y);
-        rotate(this.ang);
-        noFill();
-        stroke(this.currentColor);
-        strokeWeight(width * 0.003);
-        beginShape();
-        for (let a = 0; a < TAU; a += (TAU / 1800)) {
-            let variedRadius = this.radius * (this.scale + sin(a * this.frequency));
-            let x = variedRadius * cos(a * this.xDeform);
-            let y = variedRadius * sin(a * this.yDeform);
-            vertex(x, y);
-        }
-        endShape();
-        pop();
-    }
+				push();
+				translate(this.x, this.y);
+				rotate(this.ang);
+				noFill();
+				stroke(this.currentColor);
+				strokeWeight(width * 0.003);
+				beginShape();
+				for (let a = 0; a < TAU; a += (TAU / 1800)) {
+						let variedRadius = this.radius * (this.scale + sin(a * this.frequency));
+						let x = variedRadius * cos(a * this.xDeform);
+						let y = variedRadius * sin(a * this.yDeform);
+						vertex(x, y);
+				}
+				endShape();
+				pop();
+		}
 	update() {
 		this.timer++;
 		if (0 < this.timer && this.timer < this.phase1) {
