@@ -1,31 +1,15 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-import testVertexShader from './shaders/test/vertex.glsl'
-import testFragmentShader from './shaders/test/fragment.glsl'
+import shaderManager from './shaders/shaderPatternManager'
 
-/**
- * Base
- */
-// Debug
 const gui = new GUI()
-
-// Canvas
 const canvas = document.querySelector('canvas.webgl')
-
-// Scene
 const scene = new THREE.Scene()
-
-/**
- * Test mesh
- */
-// Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
-
-// Material
 const material = new THREE.ShaderMaterial({
-    vertexShader: testVertexShader,
-    fragmentShader: testFragmentShader,
+    vertexShader: shaderManager.patterns.shader1.vertex,
+    fragmentShader: shaderManager.patterns.shader1.fragment,
     side: THREE.DoubleSide
 })
 
@@ -82,13 +66,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const tick = () =>
 {
-    // Update controls
     controls.update()
-
-    // Render
     renderer.render(scene, camera)
-
-    // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
 

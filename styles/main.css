@@ -1,24 +1,16 @@
-:root {
-  --color-dark-red: #c1292e;
-  --color-yellow: #f1d302;
-  --color-blue: #1a53c0;
-  --color-vivid-blue: #0000ff;
-  --color-dark-blue: #083d77;
-  --color-red: #da4167;
-  --color-orange: #fbaf00;
-  --color-green: #00af54;
-  --color-white: #f0f0f0;
-  --color-black: #252525;
-  --color-light-blue: #d3d3ff;
-}
+@import "./palette-flexoki.css";
 
 :root {
-  --background-color: var(--color-white);
-  --text-color: var(--color-black);
-  --link-color: var(--color-blue);
-  --link-hover-color: var(--color-blue);
-  --highlight-color: var(--color-yellow);
-  --selection-color: var(--color-yellow);
+  --background-color: var(--flexoki-paper);
+  --text-color: var(--flexoki-900);
+  --muted-text-color: var(--flexoki-600);
+  --link-color: var(--flexoki-magenta-600);
+  --link-hover-color: var(--flexoki-magenta-700);
+  --highlight-color: var(--flexoki-magenta-100);
+  --selection-color: var(--flexoki-magenta-150);
+  --border-color: var(--flexoki-magenta-200);
+  --surface-color: var(--flexoki-magenta-50);
+  --surface-overlay-color: color-mix(in srgb, var(--surface-color) 85%, transparent);
 }
 
 body {
@@ -36,7 +28,7 @@ a {
 
 a:hover {
   color: var(--link-hover-color);
-  background-color: var(--highlight-color);
+  text-decoration: underline;
 }
 
 nav {
@@ -44,7 +36,6 @@ nav {
   top: -4px;
   left: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 nav ul li {
@@ -71,6 +62,7 @@ section h1 {
 
 section p {
   margin: 0;
+  color: var(--muted-text-color);
 }
 
 ul {
