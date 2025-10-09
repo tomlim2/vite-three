@@ -1,6 +1,7 @@
 import { OrbitControls } from '@react-three/drei'
 import Lights from './Lights.jsx'
 import Player from './Player.jsx'
+import PlayerHey from './PlayerHey.jsx'
 
 export default function Experience() {
 	return <>
@@ -9,11 +10,12 @@ export default function Experience() {
 
 		<Lights />
 
-		<mesh castShadow scale={1}>
+		<mesh castShadow scale={2}>
 			<sphereGeometry />
-			<meshStandardMaterial color="orange" />
+			<meshStandardMaterial color="#FAEEC6" />
 		</mesh>
 
+		{/* <PlayerHey /> */}
 		<Player />
 
 	</>
